@@ -1,2 +1,3 @@
-# hive-map-c
-hive-map library for c
+# Hardware Nodes
+
+routing/sensing nodes involved with hivemap
