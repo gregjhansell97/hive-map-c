@@ -51,7 +51,7 @@ Mkfile.old
 dkms.conferaph[j][2] = 0
 
 # vim
-.swp
+*.swp
 
 # enviornments
 *-env
