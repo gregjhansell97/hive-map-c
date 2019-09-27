@@ -6,24 +6,39 @@
 typedef unsigned char hmap_channel;
 typedef unsigned char hmap_space;
 
-struct HiveMapNode_t {
-   void(*on_write)(hmap_channel, unsigned char*, size_t);
-   void(*on_read)(hmap_channel, unsigned char*, size_t);
-   void(*on_child)(hmap_space, void*);
-   void(*on_peer)(hmap_space, void*);
-   void(*on_parent)(hmap_space, void*);
+struct HiveMapChannel {
+    void(*write)(void*, size_t); //msg, size
+    void(*read)(void*, size_t);
 };
 
-struct HiveMapNode_t HiveMapNode = {
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL
-};
+struct HiveMapSpace {
+    unsigned char id;
+    size_t size;
+}
 
-void hmap_set_channels(void* channels, size_t len);
-void hmap_set_spaces(void* spaces, size_t len);
-void hmap_set_state(hmap_space, void* state);
+HiveMapNode {
+    HiveMapSpace* state;
+    unsigned int loc;
+    unsigned int goal;
+    void(*state_received)(
+            unsigned int, 
+            HiveMapSpace, 
+            void*); //loc & data
+    HiveMapChannel** channels;
+    byte channels_len;
+}
+void set_channels(
+        HiveMapNode* node, 
+        HiveMapChannel** channels, 
+        size_t len);
+void update_state(HiveMapNode* node);
+
+HiveMapNode** __nodes__ = NULL;
+unsigned char __nodes_len__ = 0;
+void add_nodes(
+        HiveMapNode** nodes, 
+        unsigned char len);
+
+void hive_map_tick();
 
 #endif // HIVE_MAP_C_HIVE_MAP_H_
