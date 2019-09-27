@@ -37,11 +37,11 @@ Macro that requires a space (an example being the one defined above). The macro
 generates a structure that is a node. SPACE is assumed to be valid. All nodes 
 have these user facing attributes:
 - loc: location of node
-- goal-loc: location state changes are trying to get to
-- state-received: state received callback
+- goal_loc: location state changes are trying to get to
+- state_received: state received callback
 - state(SPACE): state of the space defined above
 
-```
+``` c
 HiveMapNode(Sensor12Space) node;
 void state_received_by_node(HivMapLoc, HiveMapSpaceId, void*);
 
@@ -56,7 +56,7 @@ node.state.sensor_1 = 0;
 node.state.sensor_2 = 0;
 ```
 
-### update-node(HiveMapNode*)
+### update_node(HiveMapNode*)
 Macro that take takes in a HiveMapNode after the node's state has been updated.
 Whether a node actually changed is up to the discression of the developer. 
 ``` c
@@ -64,11 +64,11 @@ node.state.sensor_1 = 4;
 update_node(&node);
 ```
 
-### tick-node(HiveMapNode*)
+### tick_node(HiveMapNode*)
 A node must perform certain tasks periodically for it to receive incoming state 
-changes and propogate information. To perform this, tick-node is used. Up to
-the discression of the developer to determine how often to invoke tick-node.
-```
+changes and propogate information. To perform this, tick_node is used. Up to
+the discression of the developer to determine how often to invoke tick_node.
+``` c
 tick_node(&node);
 ```
 
