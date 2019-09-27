@@ -3,42 +3,46 @@
 
 #include <stddef.h>
 
-typedef unsigned char hmap_channel;
-typedef unsigned char hmap_space;
+typedef unsigned char HiveMapSpaceId;
+typedef unsigned int HiveMapLoc;
 
-struct HiveMapChannel {
-    void(*write)(void*, size_t); //msg, size
-    void(*read)(void*, size_t);
+typedef struct HiveMapChannel {
+    void(*write)(char*, size_t); //msg, size
+    void(*read)(char*, size_t);
+} HiveMapChannel;
+
+struct HiveMapNodeBase {
+    unsigned int loc;
+    unsigned int goal_loc;
+    void(*state_received)(
+            HiveMapLoc,
+            HiveMapSpaceId,
+            void*);
+    unsigned char _channels_len;
+    HiveMapChannel** _channels;
 };
 
-struct HiveMapSpace {
-    unsigned char id;
-    size_t size;
+#define HiveMapNode(SPACE)\
+struct {\
+    unsigned int loc;\
+    unsigned int goal_loc;\
+    void(*state_received)(\
+            HiveMapLoc,\
+            HiveMapSpaceId,\
+            void*);\
+    unsigned char _channels_len;\
+    HiveMapChannel** _channels;\
+    SPACE state;\
 }
-
-HiveMapNode {
-    HiveMapSpace* state;
-    unsigned int loc;
-    unsigned int goal;
-    void(*state_received)(
-            unsigned int, 
-            HiveMapSpace, 
-            void*); //loc & data
-    HiveMapChannel** channels;
-    byte channels_len;
-}
-void set_channels(
-        HiveMapNode* node, 
-        HiveMapChannel** channels, 
+void set_node_channels(
+        void* node, 
+        HiveMapChannel* channels[], 
         size_t len);
-void update_state(HiveMapNode* node);
+void _hive_map_update_node(void* node, size_t size);
+void _hive_map_tick_node(void* node, size_t size);
+// make it a pointer sizeof(*NODE)?
+#define update_node(NODE) _hive_map_update_node(NODE, sizeof(*NODE)) 
+#define tick_node(NODE) _hive_map_tick_node(NODE, sizeof(*NODE)) 
 
-HiveMapNode** __nodes__ = NULL;
-unsigned char __nodes_len__ = 0;
-void add_nodes(
-        HiveMapNode** nodes, 
-        unsigned char len);
-
-void hive_map_tick();
 
 #endif // HIVE_MAP_C_HIVE_MAP_H_
