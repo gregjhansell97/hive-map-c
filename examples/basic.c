@@ -37,13 +37,13 @@ void state_received_by_node(
     }
 }
 int main() {
-    int* x;
-    size_t y  = sizeof(*x);
-
-
     node.loc = 10;
     node.goal_loc = 1;
     node.state_received = &state_received_by_node;
+    // setting state
+    node.state.id = SENSOR_12_SPACE_ID;
+    node.state.sensor_1 = 0;
+    node.state.sensor_2 = 0;
     set_node_channels(&node, channels, 1);
 
     while(1) {
