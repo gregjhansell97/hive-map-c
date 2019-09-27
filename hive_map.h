@@ -12,8 +12,8 @@ typedef struct HiveMapChannel {
 } HiveMapChannel;
 
 struct HiveMapNodeBase {
-    unsigned int loc;
-    unsigned int goal_loc;
+    HiveMapLoc loc;
+    HiveMapLoc goal_loc;
     void(*state_received)(
             HiveMapLoc,
             HiveMapSpaceId,
@@ -24,8 +24,8 @@ struct HiveMapNodeBase {
 
 #define HiveMapNode(SPACE)\
 struct {\
-    unsigned int loc;\
-    unsigned int goal_loc;\
+    HiveMapLoc loc;\
+    HiveMapLoc goal_loc;\
     void(*state_received)(\
             HiveMapLoc,\
             HiveMapSpaceId,\
