@@ -20,13 +20,14 @@ HiveMapChannel c = {
 A positive integer describing the location of a particular node
 
 ### HiveMapSpaceId
-A positive integer unique to a specific space. Used to define a state, must be
-the first item in a structure for that structure to be a space.
+A positive integer unique to a specific space. HiveMapSpaceId is used to define 
+a state. It must be the first item in a structure for that structure to be a 
+space.
 ``` c
 // define macro useful for keeping id of a space consistent everywhere 
 #define SENSOR_12_SPACE_ID 12
 typedef struct Sensor12Space {
-    HiveMapSpaceId id; //must be the first 
+    HiveMapSpaceId space; //must be the first, doesn't have to be named space
     unsigned char sensor_1;
     unsigned char sensor_2;
 } Sensor12Space;
@@ -45,31 +46,32 @@ have these user facing attributes:
 HiveMapNode(Sensor12Space) node;
 void state_received_by_node(HivMapLoc, HiveMapSpaceId, void*);
 
-// These fields must be filled out
-node.loc = 10;
-node.goal_loc = 1;
-node.state_received = state_received_by_node; // can be NULL if unavailable
-node.state.id = SENSOR_12_SPACE;
+// These fields must be filled out before update_node or cycle_node 
+node.loc = 10; // HiveMapLoc type of node
+node.goal_loc = 1; // HiveMapLoc type of goal location
+node.state_received = state_received_by_node; // NULL if unavailable
+node.state.space = SENSOR_12_SPACE; // needs to effectively communicate space
 
 // space is Sensor12Space
 node.state.sensor_1 = 0;
 node.state.sensor_2 = 0;
 ```
 
-### update_node(HiveMapNode*)
+### update_node(HiveMapNode*, size_t)
 Macro that take takes in a HiveMapNode after the node's state has been updated.
 Whether a node actually changed is up to the discression of the developer. 
 ``` c
 node.state.sensor_1 = 4;
-update_node(&node);
+update_node(&node, sizeof(node));
 ```
 
-### tick_node(HiveMapNode*)
+### cycle_node(HiveMapNode*, size_t)
 A node must perform certain tasks periodically for it to receive incoming state 
-changes and propogate information. To perform this, tick_node is used. Up to
-the discression of the developer to determine how often to invoke tick_node.
+changes and propogate information. To perform this, cycle_node is used. It is 
+up to the discression of the developer to determine how often cycle_node is
+invoked.
 ``` c
-tick_node(&node);
+cycle_node(&node, sizeof(node));
 ```
 
 ## Examples

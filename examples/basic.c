@@ -17,7 +17,7 @@ HiveMapChannel* channels[] = {&serial_channel};
 
 #define SENSOR_12_SPACE_ID 10
 typedef struct Sensor12Space {
-    HiveMapSpaceId id;
+    HiveMapSpaceId space;
     unsigned char sensor_1;
     unsigned char sensor_2;
 } Sensor12Space;
@@ -32,7 +32,7 @@ void state_received_by_node(
         if(id == SENSOR_12_SPACE_ID) {
             Sensor12Space* state = (Sensor12Space*)raw_state;
             node.state.sensor_1 = state->sensor_1; // changes node to new state
-            update_node(&node);
+            update_node(&node, sizeof(node));
         }
     }
 }
@@ -41,14 +41,14 @@ int main() {
     node.goal_loc = 1;
     node.state_received = &state_received_by_node;
     // setting state
-    node.state.id = SENSOR_12_SPACE_ID;
+    node.state.space = SENSOR_12_SPACE_ID;
     node.state.sensor_1 = 0;
     node.state.sensor_2 = 0;
     set_node_channels(&node, channels, 1);
 
     while(1) {
         usleep(1000);
-        tick_node(&node);
+        cycle_node(&node, sizeof(node));
     }
 
     exit(EXIT_SUCCESS);

@@ -38,11 +38,8 @@ void set_node_channels(
         void* node, 
         HiveMapChannel* channels[], 
         size_t len);
-void _hive_map_update_node(void* node, size_t size);
-void _hive_map_tick_node(void* node, size_t size);
-// make it a pointer sizeof(*NODE)?
-#define update_node(NODE) _hive_map_update_node(NODE, sizeof(*NODE)) 
-#define tick_node(NODE) _hive_map_tick_node(NODE, sizeof(*NODE)) 
+void update_node(void* node, size_t size);
+void cycle_node(void* node, size_t size);
 
 
 #endif // HIVE_MAP_C_HIVE_MAP_H_
